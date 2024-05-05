@@ -1,0 +1,22 @@
+##python
+##Standardize the required data
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
+# Load Excel file
+file_path = 'E:/科研程序/代码/vscode/亚太杯/亚太杯/第三题/Before Standardization.xlsx'  # Replace with your file path "E:\Scientific Research Program\Code\vscode\Asia Pacific Cup\Asia Pacific Cup\Question 3\DATA New.xlsx"
+
+# Load the first worksheet
+df_sheet1 = pd.read_excel(file_path, sheet_name=0)
+
+# Columns that need to be standardized
+columns_to_standardize = ['ZH Sales volume', 'Market Share', 'Global traditional energy vehicle sales', 'Global Pure electric sales', 'Plug-in sales']
+
+# Standardize using StandardScaler
+scaler = StandardScaler()
+df_sheet1_standardized = df_sheet1.copy()
+df_sheet1_standardized[columns_to_standardize] = scaler.fit_transform(df_sheet1[columns_to_standardize])
+
+# Save standardized data to a new worksheet
+with pd.ExcelWriter(file_path, engine='openpyxl', mode='a') as writer:  
+    df_sheet1_standardized.to_excel(writer, sheet_name='Sheet3', index=False)
