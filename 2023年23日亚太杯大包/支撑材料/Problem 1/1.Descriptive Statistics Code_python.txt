@@ -1,0 +1,106 @@
+###pyhton
+###Perform descriptive statistics on the data
+import pandas as pd
+from matplotlib.dates import DateFormatter
+from adjustText import adjust_text
+# Load the data
+file_path = 'E:/科研程序/代码/vscode/亚太杯/DATA.xlsx' #Change the worksheet order in excel#The visualization below is for the first question
+data = pd.read_excel(file_path)
+
+# Descriptive statistics
+desc_stats = data.describe()
+
+# Print the descriptive statistics
+print(desc_stats)
+desc_stats.to_excel('E:/科研程序/代码/vscode/亚太杯/output_file.xlsx')
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Visualization: Sales Quantity over Time (Years and Months)
+plt.figure(figsize=(15, 6))
+sns.lineplot(x="Date", y="Sales volume", data=data, marker='o')
+plt.title("Sales volume changes by Data")
+plt.xlabel("Date")
+plt.ylabel("Sales volume")
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.rcParams['font.sans-serif'] = ['SimHei']  # SimHei
+plt.rcParams['axes.unicode_minus'] = False  # 
+plt.tight_layout()
+
+# Visualization: Sales vs. Charging Piles
+plt.figure(figsize=(15, 6))
+sns.scatterplot(x="Number of public charging piles_Nationwide (cumulative)", y="Sales volume", data=data)
+plt.title("The relationship between sales volume and the number of public charging piles")
+plt.xlabel("Number of public charging piles_Nationwide (cumulative)")
+plt.ylabel("Sales volume")
+plt.grid(True)
+plt.rcParams['font.sans-serif'] = ['SimHei']  #  SimHei
+plt.rcParams['axes.unicode_minus'] = False  # 
+plt.tight_layout()
+
+# Visualization: Sales vs. Battery Capacity
+plt.figure(figsize=(15, 6))
+sns.scatterplot(x="Battery capacity (km)", y="Sales volume", data=data)
+plt.title("Relationship between sales quantity and battery capacity")
+plt.xlabel("Battery capacity (km)")
+plt.ylabel("Sales volume")
+plt.grid(True)
+plt.tight_layout()
+plt.rcParams['font.sans-serif'] = ['SimHei']  # SimHei
+plt.rcParams['axes.unicode_minus'] = False  # '-'
+plt.show()
+
+
+
+# Prepare the figure
+plt.figure(figsize=(20, 10))
+
+# Plotting Sales Quantity over Time
+sns.lineplot(x="Date", y="Sales volume", data=data, marker='o', color="black", label="Sales volume")
+
+# Define the policy columns and corresponding colors and markers
+policy_info = {
+    "Subsidy Standards for Private Purchase of New Energy Vehicle": ("red", "X"),
+    "Notice on further development of pilot projects for the promotion of energy saving and New Energy Vehicles (NEVs)": ("green", "P"),
+    "Subsidy on New Energy Vehicle 2023": ("blue", "D"),
+    "Financial Subsidy Policy for the Promotion and Application of New Energy Vehicles": ("cyan", "s"),  # 's' for square
+    "2016-2020:Ministry of Finance,No.958[2016],Subsidy scheme and product technology requirement for promotion of new energy vehicles": ("magenta", "^"),  # '^' for triangle_up
+    "Adjustments and improvements to Subsidy Policies for New Energy Vehicles": ("yellow", "o"),  # 'o' for circle
+    "Notice on vehicle and vessel tax reduction for energy saving and new energy automobiles": ("orange", "v"),  # 'v' for triangle_down
+    # Add more policies as needed...
+}
+
+# Create an empty list to collect all text objects
+texts = []
+
+# Draw policy points and text
+for policy, (color, marker) in policy_info.items():
+    policy_data = data[data[policy] == 1]
+    if not policy_data.empty:
+        sns.scatterplot(x="Date", y="Sales volume", data=policy_data, 
+                        color=color, label=policy, marker=marker, s=100)
+        # Add text to the first point of each policy
+        first_policy_date = policy_data['Date'].min()
+        text = plt.text(first_policy_date, 
+                        data.loc[data['Date'] == first_policy_date, 'Sales volume'].iloc[0], 
+                        policy, 
+                        ha='center', va='bottom')
+        texts.append(text)
+
+# Use adjust_text to improve the position of text annotations and reduce overlap
+adjust_text(texts, arrowprops=dict(arrowstyle="->", color='r', lw=0.5))
+# Enhancing the plot
+plt.title("Changes in sales volume over time and policy time periods")
+plt.xlabel("Date")
+plt.ylabel("Sales volume")
+plt.gca().xaxis.set_major_formatter(DateFormatter("%Y-%m"))
+plt.xticks(rotation=45)
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.rcParams['font.sans-serif'] = ['SimHei']  # SimHei
+plt.rcParams['axes.unicode_minus'] = False  # '-'
+# Show the plot
+plt.show()

@@ -1,0 +1,14 @@
+'作业1
+wfopen "E:\桌面存储\大三上学期\计量经济学\作业1\studentdata.xlsx"
+'AGE:年龄
+'SAT:高考总分数
+'ENSAT:高考英语成绩
+'MATHSAT:高考数学成绩
+'EN1:大学第一学期英语成绩
+'MATH1:大学第一学期数学成绩
+output(s) sp0
+pon
+'1.分析学生高考数学成绩对大学第一学期数学成绩的影响
+group g0 MATHSAT  MATH1
+freeze(math_scatter) g0.scat MATHSAT MATH1
+
